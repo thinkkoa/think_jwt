@@ -3,7 +3,7 @@
  * @Date: 2017-12-13 11:41:20 
  * @Copyright (c) - <richenlin(at)gmail.com>
  * @Last Modified by: richen
- * @Last Modified time: 2017-12-13 12:25:17
+ * @Last Modified time: 2017-12-13 12:32:32
  */
 const lib = require('think_lib');
 const jwt = require('jwt-simple');
@@ -24,6 +24,7 @@ module.exports = function (options, app) {
     return function(ctx, next){
         lib.define(ctx, 'jwtEncode', function (payload) {
             payload.sub = payload.sub || options.sub;
+            payload.exp = options.exp;
             return jwt.encode(payload, options.key, options.alg);
         });
         lib.define(ctx, 'jwtDecode', function (token) {
