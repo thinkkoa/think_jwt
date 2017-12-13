@@ -15,7 +15,6 @@ npm i think_jwt
 
 # 使用
 -----
-注意: think\_jwt 中间件依赖 think\_chache 中间件,在使用此中间件之前,请安装配置cache中间件
 
 1、项目中增加中间件 middleware/jwt.js
 ```js
