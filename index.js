@@ -3,7 +3,7 @@
  * @Date: 2017-12-13 11:41:20 
  * @Copyright (c) - <richenlin(at)gmail.com>
  * @Last Modified by: richen
- * @Last Modified time: 2017-12-13 12:15:40
+ * @Last Modified time: 2017-12-13 12:25:17
  */
 const lib = require('think_lib');
 const jwt = require('jwt-simple');
@@ -12,7 +12,7 @@ const jwt = require('jwt-simple');
 * default options
 */
 const defaultOptions = {
-    alg: "HS256", //算法
+    alg: 'HS256', //算法
     sub: 'jwt', //主题
     exp: 86400, //过期时间, now() + 86400
     key: 'ThinkKoa', //Secret,签名密码,请务必根据实际情况修改
@@ -20,7 +20,8 @@ const defaultOptions = {
 
 module.exports = function (options, app) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
-    app.once('appReady', () => {
+
+    return function(ctx, next){
         lib.define(ctx, 'jwtEncode', function (payload) {
             payload.sub = payload.sub || options.sub;
             return jwt.encode(payload, options.key, options.alg);
@@ -28,9 +29,6 @@ module.exports = function (options, app) {
         lib.define(ctx, 'jwtDecode', function (token) {
             return jwt.decode(token, options.key, options.alg);
         });
-    });
-
-    return function(ctx, next){
         return next();
-    }
+    };
 };
