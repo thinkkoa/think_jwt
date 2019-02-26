@@ -2,7 +2,7 @@
 -----
 
 [![npm version](https://badge.fury.io/js/think_jwt.svg)](https://badge.fury.io/js/think_jwt)
-[![Dependency Status](https://david-dm.org/thinkkoa/think_jwt.svg)](https://david-dm.org/thinkkoa/think_jwt)
+[![Dependency Status](https://david-dm.org/thinkkoa/think_jwt.svg)](https://david-dm.org/thinkkoa/think_jwt) [![Greenkeeper badge](https://badges.greenkeeper.io/thinkkoa/think_jwt.svg)](https://greenkeeper.io/)
 
 JWT token for ThinkKoa.
 
