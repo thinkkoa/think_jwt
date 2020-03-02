@@ -16,7 +16,6 @@ const defaultOptions = {
     sub: 'jwt', //主题
     exp: 86400, //过期时间, now() + 86400
     key: 'ThinkKoa', //Secret,签名密码,请务必根据实际情况修改
-    url: ['^\/doc\/.*', '\/static\/favicon.ico'] //需要跳过验证的路由
 };
 
 module.exports = function (options, app) {
