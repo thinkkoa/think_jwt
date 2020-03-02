@@ -2,9 +2,8 @@
 -----
 
 [![npm version](https://badge.fury.io/js/think_jwt.svg)](https://badge.fury.io/js/think_jwt)
-[![Dependency Status](https://david-dm.org/thinkkoa/think_jwt.svg)](https://david-dm.org/thinkkoa/think_jwt)
 
-JWT token for ThinkKoa.
+JWT token middleware for ThinkKoa.
 
 # 安装
 -----
@@ -16,18 +15,26 @@ npm i think_jwt
 # 使用
 -----
 
-1、项目中增加中间件 middleware/jwt.js
-```js
+## Thinkkoa
+
+1、项目中增加中间件 
+
+```
+think middleware jwt
+```
+
+2、修改 middleware/jwt.js:
+```
 module.exports = require('think_jwt');
 ```
 
-2、项目中间件配置 config/middleware.js:
-```js
-list: [..., 'jwt'], //加载的中间件列表
+3、项目中间件配置 config/middleware.js:
+```
+list: [...,'jwt'], //加载的中间件列表
 config: { //中间件配置
     ...,
     jwt: {
-        alg: "HS256", //算法
+        alg: 'HS256', //算法
         sub: 'jwt', //主题
         exp: 86400, //过期时间, now() + 86400
         key: 'ThinkKoa', //Secret,签名密码,请务必根据实际情况修改
@@ -35,25 +42,58 @@ config: { //中间件配置
 }
 ```
 
-3、使用
+## Koatty
+
+1、项目中增加中间件
+
+```shell
+koatty middleware jwt;
+```
+
+2、修改 middleware/Jwt.ts:
+
+```
+import { Middleware } from "../core/Component";
+import { Koatty } from "../Koatty";
+const apollo = require("think_apollo");
+
+@Middleware()
+export class Jwt {
+    run(options: any, app: Koatty) {
+        return apollo(options, app);
+    }
+}
+```
+
+3、项目中间件配置 config/middleware.js:
+```
+list: [...,'Jwt'], //加载的中间件列表
+config: { //中间件配置
+    ...,
+    Jwt: {
+        alg: 'HS256', //算法
+        sub: 'jwt', //主题
+        exp: 86400, //过期时间, now() + 86400
+        key: 'ThinkKoa' //Secret,签名密码,请务必根据实际情况修改
+    }
+}
+
+```
+
+# 签名及验证
 
 ```js
-// in controller
-let token = this.ctx.jwtEncode({userid: 'aaaaaaaaaa'});
+// encode
+const token = this.ctx.jwtEncode({userid: 'aaaaaaaaaa'});
 return this.ok('', token);
 ....
-// check
-if (this.ctx.jwtDecode(token)){
-    // isLogin
-}
 
-// in middleware 
-let token = ctx.jwtEncode({userid: 'aaaaaaaaaa'});
-ctx.body = token;
-...
-// check
-if (ctx.jwtDecode(token)){
-    // isLogin
-}
+
+// verify
+const token = this.ctx.get('x-access-token') || this.ctx.param('accessToken');
+const uuid = await this.ctx.jwtDecode(token).catch(err => {
+    return this.fail(err.message, 401);
+});
+// isLogin
 
 ```
