@@ -53,19 +53,19 @@ koatty middleware jwt;
 2、修改 middleware/Jwt.ts:
 
 ```
-import { Middleware } from "../core/Component";
-import { Koatty } from "../Koatty";
-const apollo = require("think_apollo");
+import { Middleware, Helper } from "koatty";
+import { App } from '../App';
+const jwt = require("think_jwt");
 
 @Middleware()
 export class Jwt {
-    run(options: any, app: Koatty) {
-        return apollo(options, app);
+    run(options: any, app: App) {
+        return jwt(options, app);
     }
 }
 ```
 
-3、项目中间件配置 config/middleware.js:
+3、项目中间件配置 config/middleware.ts:
 ```
 list: [...,'Jwt'], //加载的中间件列表
 config: { //中间件配置
@@ -91,8 +91,8 @@ return this.ok('', token);
 
 // verify
 const token = this.ctx.get('x-access-token') || this.ctx.param('accessToken');
-const uuid = await this.ctx.jwtDecode(token).catch(err => {
-    return this.fail(err.message, 401);
+const uuid = await this.ctx.jwtDecode(token).catch((err: any) => {
+    return this.fail(err.message, "", 401);
 });
 // isLogin
 

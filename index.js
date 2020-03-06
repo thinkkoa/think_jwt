@@ -27,7 +27,7 @@ module.exports = function (options, app) {
                 throw Error('must be plain Object.');
             }
             payload.sub = payload.sub || options.sub;
-            payload.exp = lib.datetime() + lib.toInt(options.exp);
+            payload.exp = lib.toInt(lib.datetime()) + lib.toInt(options.exp);
             return jwt.sign(payload, options.key, { algorithm: options.alg });
         });
         lib.define(ctx, 'jwtDecode', async function (token) {
@@ -38,14 +38,16 @@ module.exports = function (options, app) {
                 if (lib.isEmpty(token)) {
                     throw Error('TOKEN签名丢失');
                 }
-                const decoded = jwt.decode(token, { complete: true }, options.key || '');
+                const decoded = jwt.decode(token, { complete: true });
+                // @ts-ignore
                 if (lib.isEmpty(decoded) || lib.isEmpty(decoded.payload) || lib.isEmpty(decoded.payload.iss)) {
                     throw Error('TOKEN无效');
                 }
 
                 //verify
-                jwt.verify(token, options.key, { algorithm: options.alg });
+                jwt.verify(token, options.key, { algorithms: options.alg });
 
+                // @ts-ignore
                 uuid = decoded.payload.iss || '';
             } catch (err) {
                 // return ctx.json
